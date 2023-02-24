@@ -2,6 +2,7 @@ const express = require("express");
 const middlewares = require("./routes");
 const cors = require("cors");
 const clienteDB = require("./database");
+const migrateDatabase = require("./migrateDatabase");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -33,7 +34,8 @@ clienteDB
   .catch((error) => {
     console.error("database server crashed");
     console.error("error: ", error);
-  });
+  })
+  .finally(() => migrateDatabase());
 
 // Listen
 app.listen(port, () => console.log(`server listening on port ${port}`));
