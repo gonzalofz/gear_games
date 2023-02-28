@@ -1,0 +1,5 @@
+CREATE IF NOT EXIST ROLES(
+    id SERIAL,
+    nameRole VARCHAR(1OO) NOT NULL
+);
+
