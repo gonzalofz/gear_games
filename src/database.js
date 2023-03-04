@@ -8,6 +8,6 @@ const connectionData = {
   port: 5432,
 };
 
-const clientDB = new Client(connectionData);
+const Pool = new Client(connectionData);
 
-module.exports = clientDB;
+module.exports = Pool;

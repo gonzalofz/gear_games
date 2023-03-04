@@ -3,6 +3,10 @@ const middlewares = require("./routes");
 const cors = require("cors");
 const clienteDB = require("./database");
 const migrateDatabase = require("./migrateDatabase");
+// const swaggerUI = require("swagger-ui-express");
+// const swaggerJsDoc = require("swagger-jsdoc");
+// const path = require("path");
+const swagger = require("./swagger");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,6 +25,9 @@ app.use(
     origin: "*",
   })
 );
+
+//Swagger
+swagger(app);
 
 // middlewares
 middlewares(app);
