@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const createRole = require("../../services/notes/createRole");
-const getRole = require("../../services/notes/getRole");
-const getRoles = require("../../services/notes/getRoles");
+const getRole = require("../../services/roles/getRole");
+const getRoles = require("../../services/roles/getRoles");
+const createRole = require("../../services/roles/createRole");
 
 /**
  * @swagger

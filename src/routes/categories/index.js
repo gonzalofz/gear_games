@@ -1,89 +1,86 @@
-// GET all categories
-app.get("/categories", (req, res) => {
-  pool.query("SELECT * FROM categories", (error, results) => {
-    if (error) {
-      res.status(500).json({ message: "Internal server error" });
-    } else {
-      res.status(200).json(results.rows);
-    }
-  });
-});
+const express = require("express");
+const router = express.Router();
+const pool = require("../../database");
 
-// GET a category by ID
-app.get("/categories/:id", (req, res) => {
-  const id = req.params.id;
-  pool.query(
-    "SELECT * FROM categories WHERE id = $1",
-    [id],
-    (error, results) => {
-      if (error) {
-        res.status(500).json({ message: "Internal server error" });
-      } else if (results.rows.length === 0) {
-        res.status(404).json({ message: `Category with ID ${id} not found` });
-      } else {
-        res.status(200).json(results.rows[0]);
-      }
-    }
-  );
-});
-
-// CREATE a new category
-app.post("/categories", (req, res) => {
-  const { categoryName } = req.body;
-  if (!categoryName) {
-    res.status(400).json({ message: "categoryName is required" });
-  } else {
-    pool.query(
+// CREATE category
+router.post("/category", async (req, res) => {
+  try {
+    const { categoryName } = req.body;
+    const newCategory = await pool.query(
       "INSERT INTO categories (categoryName) VALUES ($1) RETURNING *",
-      [categoryName],
-      (error, results) => {
-        if (error) {
-          res.status(500).json({ message: "Internal server error" });
-        } else {
-          res.status(201).json(results.rows[0]);
-        }
-      }
+      [categoryName]
     );
+    res.json(newCategory.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
-// UPDATE an existing category
-app.put("/categories/:id", (req, res) => {
-  const id = req.params.id;
-  const { categoryName } = req.body;
-  if (!categoryName) {
-    res.status(400).json({ message: "categoryName is required" });
-  } else {
-    pool.query(
-      "UPDATE categories SET categoryName = $1 WHERE id = $2 RETURNING *",
-      [categoryName, id],
-      (error, results) => {
-        if (error) {
-          res.status(500).json({ message: "Internal server error" });
-        } else if (results.rows.length === 0) {
-          res.status(404).json({ message: `Category with ID ${id} not found` });
-        } else {
-          res.status(200).json(results.rows[0]);
-        }
-      }
-    );
+// READ all categories
+router.get("/categories", async (req, res) => {
+  try {
+    const allCategories = await pool.query("SELECT * FROM categories");
+    res.json(allCategories.rows);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
 });
 
-// DELETE an existing category
-app.delete("/categories/:id", (req, res) => {
-  const id = req.params.id;
-  pool.query(
-    "DELETE FROM categories WHERE id = $1 RETURNING *",
-    [id],
-    (error, results) => {
-      if (error) {
-        res.status(500).json({ message: "Internal server error" });
-      } else if (results.rows.length === 0) {
-        res.status(404).json({ message: `Category with ID ${id} not found` });
-      } else {
-        res.status(204).end();
-      }
+// READ single category
+router.get("/category/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const category = await pool.query(
+      "SELECT * FROM categories WHERE id = $1",
+      [id]
+    );
+    if (category.rows.length === 0) {
+      return res.status(404).json({ message: "Category not found" });
     }
-  );
+    res.json(category.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
 });
+
+// UPDATE category
+router.put("/category/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { categoryName } = req.body;
+    const updatedCategory = await pool.query(
+      "UPDATE categories SET categoryName = $1 WHERE id = $2 RETURNING *",
+      [categoryName, id]
+    );
+    if (updatedCategory.rows.length === 0) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    res.json(updatedCategory.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+// DELETE category
+router.delete("/category/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedCategory = await pool.query(
+      "DELETE FROM categories WHERE id = $1 RETURNING *",
+      [id]
+    );
+    if (deletedCategory.rows.length === 0) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+    res.json({ message: "Category deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+module.exports = router;

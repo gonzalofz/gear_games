@@ -1,83 +1,84 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
 
-// CREATE
-router.post("/communes", async (req, res) => {
-  try {
-    const { name, city_id } = req.body;
-    const query =
-      "INSERT INTO communes (name, city_id) VALUES ($1, $2) RETURNING *";
-    const values = [name, city_id];
-    const result = await db.query(query, values);
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
-  }
-});
-
-// READ ALL
+// get all communes
 router.get("/communes", async (req, res) => {
   try {
-    const query = "SELECT * FROM communes";
-    const result = await db.query(query);
-    res.status(200).json(result.rows);
+    const communes = await pool.query("SELECT * FROM communes");
+    res.json(communes.rows);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// READ ONE
+// get a single commune by id
 router.get("/communes/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    const query = "SELECT * FROM communes WHERE id = $1";
-    const values = [id];
-    const result = await db.query(query, values);
-    if (result.rows.length === 0) {
-      return res.status(404).send("Commune not found");
+    const commune = await pool.query("SELECT * FROM communes WHERE id = $1", [
+      id,
+    ]);
+    if (commune.rows.length === 0) {
+      return res.status(404).json({ message: "Commune not found" });
     }
-    res.status(200).json(result.rows[0]);
+    res.json(commune.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// UPDATE
-router.put("/commune/:id", async (req, res) => {
+// create a new commune
+router.post("/communes", async (req, res) => {
+  const { name, city_id } = req.body;
   try {
-    const { id } = req.params;
-    const { name, city_id } = req.body;
-    const query =
-      "UPDATE communes SET name = $1, city_id = $2 WHERE id = $3 RETURNING *";
-    const values = [name, city_id, id];
-    const result = await db.query(query, values);
-    if (result.rows.length === 0) {
-      return res.status(404).send("Commune not found");
-    }
-    res.status(200).json(result.rows[0]);
+    const newCommune = await pool.query(
+      "INSERT INTO communes (name, city_id) VALUES ($1, $2) RETURNING *",
+      [name, city_id]
+    );
+    res.json(newCommune.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// DELETE
-router.delete("/commune/:id", async (req, res) => {
+// update a commune by id
+router.put("/communes/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, city_id } = req.body;
   try {
-    const { id } = req.params;
-    const query = "DELETE FROM communes WHERE id = $1 RETURNING *";
-    const values = [id];
-    const result = await db.query(query, values);
-    if (result.rows.length === 0) {
-      return res.status(404).send("Commune not found");
+    const updatedCommune = await pool.query(
+      "UPDATE communes SET name = $1, city_id = $2 WHERE id = $3 RETURNING *",
+      [name, city_id, id]
+    );
+    if (updatedCommune.rows.length === 0) {
+      return res.status(404).json({ message: "Commune not found" });
     }
-    res.status(200).send("Commune deleted");
+    res.json(updatedCommune.rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Server error");
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
+// delete a commune by id
+router.delete("/communes/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedCommune = await pool.query(
+      "DELETE FROM communes WHERE id = $1 RETURNING *",
+      [id]
+    );
+    if (deletedCommune.rows.length === 0) {
+      return res.status(404).json({ message: "Commune not found" });
+    }
+    res.json({ message: "Commune deleted" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+module.exports = router;

@@ -1,4 +1,8 @@
-app.get("/users", (req, res) => {
+const express = require("express");
+const router = express.Router();
+const pool = require("../../database");
+
+router.get("/users", (req, res) => {
   pool.query("SELECT * FROM users", (error, results) => {
     if (error) {
       res.status(500).send(error.message);
@@ -9,7 +13,7 @@ app.get("/users", (req, res) => {
 });
 
 // GET one user by ID
-app.get("/users/:id", (req, res) => {
+router.get("/users/:id", (req, res) => {
   const userId = req.params.id;
   pool.query("SELECT * FROM users WHERE id=$1", [userId], (error, results) => {
     if (error) {
@@ -23,14 +27,14 @@ app.get("/users/:id", (req, res) => {
 });
 
 // POST a new user
-app.post("/users", (req, res) => {
-  const { name, email, address_id, id_rol } = req.body;
-  if (!name || !email || !id_rol) {
+router.post("/users", (req, res) => {
+  const { name, email, id_rol = 3 } = req.body;
+  if (!name || !email) {
     res.status(400).send("Missing required fields");
   } else {
     pool.query(
-      "INSERT INTO users (name, email, addreses_id, id_rol) VALUES ($1, $2, $3, $4) RETURNING *",
-      [name, email, address_id, id_rol],
+      "INSERT INTO users (name, email, id_rol) VALUES ($1, $2, $3) RETURNING *",
+      [name, email, id_rol],
       (error, results) => {
         if (error) {
           res.status(500).send(error.message);
@@ -43,7 +47,7 @@ app.post("/users", (req, res) => {
 });
 
 // PUT or update an existing user by ID
-app.put("/users/:id", (req, res) => {
+router.put("/users/:id", (req, res) => {
   const userId = req.params.id;
   const { name, email, address_id, id_rol } = req.body;
   if (!name || !email || !id_rol) {
@@ -64,3 +68,5 @@ app.put("/users/:id", (req, res) => {
     );
   }
 });
+
+module.exports = router;

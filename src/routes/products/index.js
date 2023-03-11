@@ -1,65 +1,101 @@
-// Get all communes
-router.get("/communes", async (req, res) => {
+const express = require("express");
+const router = express.Router();
+const pool = require("../../database");
+
+// GET all products
+router.get("/products", async (req, res) => {
   try {
-    const communes = await pool.query("SELECT * FROM communes");
-    res.json(communes.rows);
-  } catch (err) {
-    console.error(err.message);
+    const products = await pool.query("SELECT * FROM products");
+    res.json(products.rows);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
-// Get a single commune
-router.get("/communes/:id", async (req, res) => {
-  const { id } = req.params;
+// GET a single product by ID
+router.get("/products/:id", async (req, res) => {
   try {
-    const commune = await pool.query("SELECT * FROM communes WHERE id = $1", [
+    const { id } = req.params;
+    const product = await pool.query("SELECT * FROM products WHERE id = $1", [
       id,
     ]);
-    res.json(commune.rows[0]);
-  } catch (err) {
-    console.error(err.message);
+    if (product.rowCount === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
-// Create a commune
-router.post("/communes", async (req, res) => {
-  const { name, city_id } = req.body;
+// CREATE a new product
+router.post("/product", async (req, res) => {
   try {
-    const newCommune = await pool.query(
-      "INSERT INTO communes (name, city_id) VALUES ($1, $2) RETURNING *",
-      [name, city_id]
+    const {
+      productName,
+      price,
+      stock,
+      description,
+      image,
+      id_brand,
+      id_category,
+    } = req.body;
+    const newProduct = await pool.query(
+      "INSERT INTO products (productName, price, stock, description, image, id_brand, id_category) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [productName, price, stock, description, image, id_brand, id_category]
     );
-    res.json(newCommune.rows[0]);
-  } catch (err) {
-    console.error(err.message);
+    res.status(201).json(newProduct.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
-// Update a commune
-router.put("/communes/:id", async (req, res) => {
-  const { id } = req.params;
-  const { name, city_id } = req.body;
+// UPDATE a product by ID
+router.put("/products/:id", async (req, res) => {
   try {
-    const updatedCommune = await pool.query(
-      "UPDATE communes SET name = $1, city_id = $2 WHERE id = $3",
-      [name, city_id, id]
+    const { id } = req.params;
+    const {
+      productName,
+      price,
+      stock,
+      description,
+      image,
+      id_brand,
+      id_category,
+    } = req.body;
+    const updatedProduct = await pool.query(
+      "UPDATE products SET productName = $1, price = $2, stock = $3, description = $4, image = $5, id_brand = $6, id_category = $7 WHERE id = $8 RETURNING *",
+      [productName, price, stock, description, image, id_brand, id_category, id]
     );
-    res.json("Commune was updated!");
-  } catch (err) {
-    console.error(err.message);
+    if (updatedProduct.rowCount === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(updatedProduct.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
-// Delete a commune
-router.delete("/communes/:id", async (req, res) => {
-  const { id } = req.params;
+// DELETE a product by ID
+router.delete("/products/:id", async (req, res) => {
   try {
-    const deletedCommune = await pool.query(
-      "DELETE FROM communes WHERE id = $1",
+    const { id } = req.params;
+    const deletedProduct = await pool.query(
+      "DELETE FROM products WHERE id = $1 RETURNING *",
       [id]
     );
-    res.json("Commune was deleted!");
-  } catch (err) {
-    console.error(err.message);
+    if (deletedProduct.rowCount === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server Error" });
   }
 });
+
+module.exports = router;
