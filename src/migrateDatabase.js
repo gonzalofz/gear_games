@@ -6,6 +6,16 @@ const migrateDatabase = async () => {
   try {
     const sqlMigrate = fs.readFileSync("dataTables.sql").toString();
     await Pool.query(sqlMigrate);
+
+    const arguments = process.argv;
+    const isMigrate = arguments.slice(-1)[0] === "migrate";
+
+    if (isMigrate) {
+      const sqlDataMigrate = fs.readFileSync("dataMigrate.sql").toString();
+      await Pool.query(sqlDataMigrate);
+
+      console.log("He migrado la base de datos con exito!");
+    }
   } catch (error) {
     console.error(error.stack);
   }
