@@ -7,8 +7,8 @@ const migrateDatabase = async () => {
     const sqlMigrate = fs.readFileSync("dataTables.sql").toString();
     await Pool.query(sqlMigrate);
 
-    const arguments = process.argv;
-    const isMigrate = arguments.slice(-1)[0] === "migrate";
+    const args = process.argv;
+    const isMigrate = args.slice(-1)[0] === "migrate";
 
     if (isMigrate) {
       const sqlDataMigrate = fs.readFileSync("dataMigrate.sql").toString();
