@@ -1,10 +1,10 @@
 const express = require("express");
 const pool = require("../../database");
-const { default: createBrand } = require("../../services/brands/createBrand");
-const { default: deleteBrand } = require("../../services/brands/deleteBrand");
-const { default: getBrand } = require("../../services/brands/getbrand");
-const { default: getBrands } = require("../../services/brands/getBrands");
-const { default: updateBrand } = require("../../services/brands/updateBrand");
+const createBrand = require("../../services/brands/createBrand");
+const deleteBrand = require("../../services/brands/deleteBrand");
+const getBrand = require("../../services/brands/getbrand");
+const getBrands = require("../../services/brands/getBrands");
+const updateBrand = require("../../services/brands/updateBrand");
 const router = express.Router();
 
 // CREATE brand

@@ -1,13 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const {
-  default: createProduct,
-} = require("../../services/products/createProduct");
-const {
-  default: deleteProduct,
-} = require("../../services/products/deleteProduct");
-const { default: getProduct } = require("../../services/products/getproduct");
-const { default: getProducts } = require("../../services/products/getProducts");
+const createProduct = require("../../services/products/createProduct");
+const deleteProduct = require("../../services/products/deleteProduct");
+const getProduct = require("../../services/products/getproduct");
+const getProducts = require("../../services/products/getProducts");
 
 // GET all products
 router.get("/products", async (req, res) => {

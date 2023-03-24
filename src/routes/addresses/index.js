@@ -1,17 +1,9 @@
 const express = require("express");
-const {
-  default: createAddress,
-} = require("../../services/addresses/createAddress");
-const {
-  default: deleteAddress,
-} = require("../../services/addresses/deleteAddress");
-const { default: getAddress } = require("../../services/addresses/getAddress");
-const {
-  default: getAddresses,
-} = require("../../services/addresses/getAddresses");
-const {
-  default: updateAddress,
-} = require("../../services/addresses/updateAddress");
+const createAddress = require("../../services/addresses/createAddress");
+const deleteAddress = require("../../services/addresses/deleteAddress");
+const getAddress = require("../../services/addresses/getAddress");
+const getAddresses = require("../../services/addresses/getAddresses");
+const updateAddress = require("../../services/addresses/updateAddress");
 const router = express.Router();
 
 // CREATE address

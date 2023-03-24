@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { default: createUser } = require("../../services/users/createUser");
-const { default: getUser } = require("../../services/users/getUser");
-const { default: getUsers } = require("../../services/users/getUsers");
-const { default: updateUser } = require("../../services/users/updateUser");
-const { default: login } = require("../../services/users/login");
+const createUser = require("../../services/users/createUser");
+const getUser = require("../../services/users/getUser");
+const getUsers = require("../../services/users/getUsers");
+const updateUser = require("../../services/users/updateUser");
+const login = require("../../services/users/login");
 
 router.get("/users", (req, res) => {
   getUsers(req, res);

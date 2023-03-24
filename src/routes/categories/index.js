@@ -1,20 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const {
-  default: createCategory,
-} = require("../../services/categories/createCategory");
-const {
-  default: deleteCategory,
-} = require("../../services/categories/deleteCategory");
-const {
-  default: getCategories,
-} = require("../../services/categories/getCategories");
-const {
-  default: getCategory,
-} = require("../../services/categories/getCategory");
-const {
-  default: updateCategory,
-} = require("../../services/categories/updateCategory");
+const createCategory = require("../../services/categories/createCategory");
+const deleteCategory = require("../../services/categories/deleteCategory");
+const getCategories = require("../../services/categories/getCategories");
+const getCategory = require("../../services/categories/getCategory");
+const updateCategory = require("../../services/categories/updateCategory");
 
 // CREATE category
 router.post("/category", async (req, res) => {

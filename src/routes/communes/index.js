@@ -1,15 +1,9 @@
 const express = require("express");
-const {
-  default: createCommune,
-} = require("../../services/commune/createCommune");
-const {
-  default: deleteCommune,
-} = require("../../services/commune/deleteCommune");
-const { default: getCommune } = require("../../services/commune/getCommune");
-const { default: getCommunes } = require("../../services/commune/getCommunes");
-const {
-  default: updateCommune,
-} = require("../../services/commune/updateCommune");
+const createCommune = require("../../services/commune/createCommune");
+const deleteCommune = require("../../services/commune/deleteCommune");
+const getCommune = require("../../services/commune/getCommune");
+const getCommunes = require("../../services/commune/getCommunes");
+const updateCommune = require("../../services/commune/updateCommune");
 const router = express.Router();
 
 // get all communes
