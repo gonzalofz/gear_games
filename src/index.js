@@ -15,16 +15,18 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 
 //CORS
-app.get("/cors", (req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
-  res.send({ msg: "This has CORS enabled 🎈" });
-});
+if (process.env.enviroment !== "prod") {
+  app.get("/cors", (req, res) => {
+    res.set("Access-Control-Allow-Origin", "*");
+    res.send({ msg: "This has CORS enabled 🎈" });
+  });
 
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+  app.use(
+    cors({
+      origin: "*",
+    })
+  );
+}
 
 //Swagger
 swagger(app);
