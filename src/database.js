@@ -1,11 +1,11 @@
 const { Client } = require("pg");
 
 const connectionData = {
-  host: "localhost",
+  host: "containers-us-west-43.railway.app",
   user: "postgres",
-  database: "geargames",
-  password: "123456",
-  port: 5432,
+  database: "railway",
+  password: "u5Y8DqEHXOtVR6hXzSeF",
+  port: 7257,
 };
 
 const Pool = new Client(connectionData);
