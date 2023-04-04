@@ -46,7 +46,7 @@ VALUES (
     47990, 
     50, 
     'Juego de aventuras y exploración', 
-    'https://falabella.scene7.com/is/image/Falabella/5587019_1?wid=800&hei=800&qlt=70', 
+    'https://www.zelda.com/breath-of-the-wild/assets/icons/BOTW-Share_icon.jpg', 
     1, 
     1
 );
@@ -88,7 +88,7 @@ VALUES (
     47990, 
     30, 
     'Juego de lucha multijugador', 
-    'https://falabella.scene7.com/is/image/Falabella/6859205_1?wid=800&hei=800&qlt=70', 
+    'https://cdnx.jumpseller.com/station4games/image/14424859/SUPER_SMASH_BROS_ULTIMATE.jpg', 
     1, 
     1
 );
@@ -110,6 +110,69 @@ VALUES (
     10, 
     'Juego de simulación de vida en una isla desierta', 
     'https://http2.mlstatic.com/D_NQ_NP_2X_823409-MLA45732677004_042021-V.webp', 
+    1, 
+    1
+);
+
+INSERT INTO 
+    products 
+    (
+        productName, 
+        price, 
+        stock, 
+        description, 
+        image, 
+        id_brand, 
+        id_category
+    ) 
+VALUES (
+    'Hogwarts Legacy PS5', 
+    47990, 
+    30, 
+    'aventura', 
+    'https://www.hogwartslegacy.com/images/share.jpg', 
+    1, 
+    1
+);
+
+INSERT INTO 
+    products 
+    (
+        productName, 
+        price, 
+        stock, 
+        description, 
+        image, 
+        id_brand, 
+        id_category
+    ) 
+VALUES (
+    'elder ring', 
+    51990, 
+    30, 
+    'aventura', 
+    'https://image.api.playstation.com/vulcan/img/rnd/202201/1918/WcbRvn170YRnoDPDVJ0W7c72.jpg', 
+    1, 
+    1
+);
+
+INSERT INTO 
+    products 
+    (
+        productName, 
+        price, 
+        stock, 
+        description, 
+        image, 
+        id_brand, 
+        id_category
+    ) 
+VALUES (
+    'darck soul', 
+    29990, 
+    30, 
+    'aventura', 
+    'https://cdn-products.eneba.com/resized-products/SV7tWy7_350x200_3x-0.jpg', 
     1, 
     1
 );
